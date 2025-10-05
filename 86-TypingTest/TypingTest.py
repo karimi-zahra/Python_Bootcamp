@@ -1,4 +1,3 @@
-import time
 from tkinter import *
 import random
 
@@ -35,11 +34,11 @@ def deleter():
 def show_feedback(color):
     text.delete("1.0", "end")
     text_writer(color)
-    root.after(500, deleter)
+    root.after(200, deleter)
 
 def space_pressed(event):
     global correct_words, typed_words
-    if event.keysym == "space":
+    if event.char == " ":
         input = typed.get("1.0", "end-1c")
         if input.strip() == text_gen[0].strip():
             correct_words +=1
@@ -47,10 +46,12 @@ def space_pressed(event):
         else:
             show_feedback(RED)
         typed_words +=1
-
+        return "break"
 def start_text():
+    global correct_words, typed_words,text_gen
+    correct_words = typed_words = 0
+    text_gen = text_generator()
     text.delete("1.0", "end")
-    typed.delete("1.0", "end")
     text_writer(MENTIONER)
     typed.config(state=NORMAL)
     start.config(state=DISABLED)
@@ -67,6 +68,8 @@ def start_timer():
     global SEC
     if SEC == 0 :
         sec_label.config(text = "time finished")
+        typed.delete("1.0", "end")
+        text_gen.clear()
         typed.config(state=DISABLED)
         start.config(state=NORMAL)
         results()
